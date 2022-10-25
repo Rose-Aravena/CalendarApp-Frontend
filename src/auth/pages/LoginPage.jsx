@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import Swal from 'sweetalert2';
 import { useAuthStore, useForm } from '../../hooks';
 import './LoginPage.css';
 
@@ -15,20 +17,31 @@ const registerFormFields = {
 
 export const LoginPage = () => {
 
-    const {startLogin} = useAuthStore();
+    const { startLogin, errorMessage, startRegister } = useAuthStore();
 
-    const {loginEmail, loginPassword, onInputChange:onLoginInputChange} = useForm(loginFormFields);
-    const {registerName, registerEmail, registerPassword, registerPassword2, onInputChange:onRegisterInputChange} = useForm(registerFormFields);
+    const { loginEmail, loginPassword, onInputChange: onLoginInputChange } = useForm(loginFormFields);
+    const { registerName, registerEmail, registerPassword, registerPassword2, onInputChange: onRegisterInputChange } = useForm(registerFormFields);
 
     const loginSubmit = (event) => {
         event.preventDefault();
-        startLogin({email: loginEmail, password: loginPassword});
+        startLogin({ email: loginEmail, password: loginPassword });
     }
 
     const registerSubmit = (event) => {
         event.preventDefault();
-        console.log({registerName, registerEmail, registerPassword, registerPassword2});
+        if(registerPassword !== registerPassword2){
+            Swal.fire('Error en el registro', 'Las contraseñas no son iguales', 'error');
+            return;
+        }
+        startRegister({ name: registerName, email: registerEmail, password :registerPassword});
     }
+
+    useEffect(() => {
+        if(errorMessage !== undefined){
+            Swal.fire('Error en la autenticacion', errorMessage, 'error')
+        }
+    }, [errorMessage])
+
 
     return (
         <div className="container login-container">
@@ -42,8 +55,8 @@ export const LoginPage = () => {
                                 className="form-control"
                                 placeholder="Correo"
                                 name='loginEmail'
-                                value={ loginEmail }
-                                onChange={ onLoginInputChange }
+                                value={loginEmail}
+                                onChange={onLoginInputChange}
                             />
                         </div>
                         <div className="form-group mb-2">
@@ -52,8 +65,8 @@ export const LoginPage = () => {
                                 className="form-control"
                                 placeholder="Contraseña"
                                 name='loginPassword'
-                                value={ loginPassword }
-                                onChange={ onLoginInputChange }
+                                value={loginPassword}
+                                onChange={onLoginInputChange}
                             />
                         </div>
                         <div className="d-grid goap-2">
@@ -74,8 +87,8 @@ export const LoginPage = () => {
                                 className="form-control"
                                 placeholder="Nombre"
                                 name='registerName'
-                                value={ registerName }
-                                onChange={ onRegisterInputChange }
+                                value={registerName}
+                                onChange={onRegisterInputChange}
                             />
                         </div>
                         <div className="form-group mb-2">
@@ -84,8 +97,8 @@ export const LoginPage = () => {
                                 className="form-control"
                                 placeholder="Correo"
                                 name='registerEmail'
-                                value={ registerEmail }
-                                onChange={ onRegisterInputChange }
+                                value={registerEmail}
+                                onChange={onRegisterInputChange}
                             />
                         </div>
                         <div className="form-group mb-2">
@@ -94,8 +107,8 @@ export const LoginPage = () => {
                                 className="form-control"
                                 placeholder="Contraseña"
                                 name='registerPassword'
-                                value={ registerPassword }
-                                onChange={ onRegisterInputChange }
+                                value={registerPassword}
+                                onChange={onRegisterInputChange}
                             />
                         </div>
                         <div className="form-group mb-2">
@@ -104,8 +117,8 @@ export const LoginPage = () => {
                                 className="form-control"
                                 placeholder="Repita la contraseña"
                                 name='registerPassword2'
-                                value={ registerPassword2 }
-                                onChange={ onRegisterInputChange }
+                                value={registerPassword2}
+                                onChange={onRegisterInputChange}
                             />
                         </div>
                         <div className="d-grid goap-2">
