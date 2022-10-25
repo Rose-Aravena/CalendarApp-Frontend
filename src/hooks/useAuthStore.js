@@ -13,7 +13,8 @@ export const useAuthStore = () => {
             const {data} = await calendarApi.post('/auth', {email, password});
             localStorage.setItem('token', data.token);
             localStorage.setItem('token-init-date', new Date().getTime());
-            dispatch(onLogin({name: data.name, uid: data.uid}))
+            dispatch(onLogin({name: data.name, uid: data.uid}));
+
         } catch (error) {
             dispatch( onLogout('Email o contraseña incorrectas'));
             setTimeout(() => {
@@ -23,15 +24,38 @@ export const useAuthStore = () => {
     }
 
     const startRegister = async({name, email, password}) => {
+        dispatch( onChecking());
         try {
             const {data} = await calendarApi.post('/auth/new', {name, email, password});
-            dispatch(onLogin({name: data.name, uid: data.uid}))
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('token-init-date', new Date().getTime());
+            dispatch(onLogin({name: data.name, uid: data.uid}));
+
         } catch ({response}) {
-            dispatch( onLogout(response.data.msg));
+            dispatch( onLogout(response.data?.msg || ''));
             setTimeout(() => {
                 dispatch(clearErrorMessage());
             }, 10);
         }
+    }
+
+    const checkAuthToken = async() => {
+        const token = localStorage.getItem('token');
+        if(!token) return dispatch(onLogout());
+        try {
+            const {data} = await calendarApi.get('auth/renew');
+            localStorage.setItem('token', data.token)
+            localStorage.setItem('token-init-date', new Date().getTime());
+            dispatch(onLogin({name: data.name, uid: data.uid}));
+        } catch (error) {
+            localStorage.clear();
+            dispatch(onLogout());
+        }
+    }
+
+    const startLogout = () => {
+        localStorage.clear();
+        dispatch(onLogout());
     }
 
     return {
@@ -40,6 +64,8 @@ export const useAuthStore = () => {
         errorMessage,
 
         startLogin,
-        startRegister
+        startRegister,
+        checkAuthToken,
+        startLogout,
     }
 }
