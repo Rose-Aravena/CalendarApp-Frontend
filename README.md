@@ -15,4 +15,4 @@ Puedes visitar [CalendarApp](https://calendarbackend-api.herokuapp.com) para pro
 
 Si te interesa saber como se genero el backend de esta app puedes visitar el repositorio [Calendar-backend](https://github.com/Rose-Aravena/calendar-backend)
 
--Tanto este repositorio como el del backend fueron desarrollados en el curso de [Raect](https://sence.udemy.com/course/react-cero-experto/) de Udemy.
+-Tanto este repositorio como el del backend fueron desarrollados en el curso de [React](https://sence.udemy.com/course/react-cero-experto/) de Udemy.
