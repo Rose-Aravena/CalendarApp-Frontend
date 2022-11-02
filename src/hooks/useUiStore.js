@@ -19,8 +19,8 @@ export const useUiStore = () => {
 
     const toogleDateModal = () => {
         (isDateModalOpen)
-        ? openDateModal
-        : closeDateModal
+        ? openDateModal()
+        : closeDateModal()
     }
 
     return {
